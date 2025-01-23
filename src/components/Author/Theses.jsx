@@ -1,73 +1,114 @@
-import {useNavigate} from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-
-const Theses = ({theses}) => {
-
+const Theses = ({ theses }) => {
+    const [expanded, setExpanded] = useState({});
     const navigate = useNavigate();
+
+    const toggleExpand = (id) => {
+        setExpanded((prev) => ({
+            ...prev,
+            [id]: !prev[id],
+        }));
+    };
+
     const redirectToProfile = (id) => {
         navigate(`/autores/${id}`);
-    }
+    };
 
     const parseAutores = (autoresArray) => {
         try {
             return autoresArray.map((autor) => {
-                console.log("String original:", autor);
                 const corrected = autor
-                    .replace(/'/g, '"') // Cambia comillas simples por dobles
-                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"'); // Elimina ObjectId de manera segura
+                    .replace(/'/g, '"') // Replace single quotes with double quotes
+                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"'); // Safely remove ObjectId
                 return JSON.parse(corrected);
             });
         } catch (error) {
-            console.error("Error al parsear autores:", error);
+            console.error("Error parsing authors:", error);
             return [];
         }
     };
 
-
     return (
-        <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4">Tesis</h2>
+        <section className="p-8 bg-gray-100 rounded-2xl">
+            <h2 className="text-2xl font-bold mb-4 text-ajuyDark">Theses</h2>
             {theses.length > 0 ? (
-                <ul className="space-y-3">
+                <ul className="space-y-4 max-w-screen-xl mx-auto">
                     {theses.map((tesis) => (
                         <li
                             key={tesis.id}
-                            className="bg-blue-600 p-4 rounded-md hover:bg-blue-700 transition"
+                            className="bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105"
                         >
-                            <h3 className="text-xl font-bold">{tesis.Título}</h3>
-                            <div className="mt-2">
-                                {parseAutores(tesis.Autores).map((aut, index) => (
-                                    <div key={index} className="text-green-950">
-                                        { aut.Autores && <p onClick={() => redirectToProfile(aut._id)}
-                                             className="text-lg font-bold hover:bg-sky-700">Autor: {aut.Autores}</p>}
+                            <h3
+                                className="bg-ajuyDark text-white text-xl font-bold p-4 rounded-t-lg cursor-pointer hover:bg-ajuyLight"
+                                onClick={() => toggleExpand(tesis.id)}
+                            >
+                                {tesis.Título}
+                            </h3>
+                            {expanded[tesis.id] && (
+                                <div className="p-4 bg-gray-200 rounded-b-lg text-ajuyDark">
+                                    <div>
+                                        {parseAutores(tesis.Autores).map((autor, index) => (
+                                            <div key={index} className="text-green-950">
+                                                {autor.Nombre && (
+                                                    <p
+                                                        onClick={() => redirectToProfile(autor._id)}
+                                                        className="text-lg font-bold hover:text-blue-600 cursor-pointer"
+                                                    >
+                                                        Author: {autor.Nombre}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
-                            <div className="mt-2">
-                                {parseAutores(tesis.Director).map((aut, index) => (
-                                    <div key={index} className="text-green-950">
-                                        <p onClick={() => redirectToProfile(aut._id)}
-                                           className="text-lg font-bold hover:bg-sky-700">Director: {aut.Nombre}</p>
+                                    <div>
+                                        {parseAutores(tesis.Director).map((director, index) => (
+                                            <div key={index} className="text-green-950">
+                                                <p
+                                                    onClick={() => redirectToProfile(director._id)}
+                                                    className="text-lg font-bold hover:text-blue-600 cursor-pointer"
+                                                >
+                                                    Supervisor: {director.Nombre}
+                                                </p>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
-                            {tesis.clasificación_UNESCO && <h3>Clasificación UNESCO: {tesis.Clasificación_UNESCO}</h3>}
-                            {tesis.Colección && <h3>Colección: {tesis.Colección}</h3>}
-                            {tesis.Departamento && <h3>Departamento: {tesis.Departamento}</h3>}
-                            {tesis.Fecha_de_publicación && <h3>Fecha de publicación{tesis.Fecha_de_publicación}</h3>}
-                            {tesis.Descripción && <h3>Fuente: {tesis.Descripción}</h3>}
-                            {tesis.ISSN && <h3>ISSN: {tesis.ISSN}</h3>}
-                            {tesis.Palabras_clave && <h3>Palabras clave: {tesis.Palabras_clave}</h3>}
-                            {tesis.PDF && <h3>PDF: {tesis.PDF}</h3>}
-                            {tesis.Resumen && <h3 className="text-2xl text-accent">Resumen: {tesis.Resumen}</h3>}
-                            {tesis.PDF && <h3><a href={tesis.PDF} target="_blank">Link</a></h3>}
-
-
+                                    {tesis.clasificación_UNESCO && (
+                                        <h4 className="text-gray-700">
+                                            UNESCO Classification: {tesis.clasificación_UNESCO}
+                                        </h4>
+                                    )}
+                                    {tesis.Departamento && (
+                                        <h4 className="text-gray-700">Department: {tesis.Departamento}</h4>
+                                    )}
+                                    {tesis.Fecha_de_publicación && (
+                                        <h4 className="text-gray-700">
+                                            Publication Date: {tesis.Fecha_de_publicación}
+                                        </h4>
+                                    )}
+                                    {tesis.Resumen && (
+                                        <h4 className="text-gray-700">Summary: {tesis.Resumen}</h4>
+                                    )}
+                                    {tesis.PDF && (
+                                        <h4 className="text-gray-700">
+                                            PDF:{" "}
+                                            <a
+                                                href={tesis.PDF}
+                                                target="_blank"
+                                                className="text-blue-600 hover:underline"
+                                            >
+                                                View PDF
+                                            </a>
+                                        </h4>
+                                    )}
+                                </div>
+                            )}
                         </li>
                     ))}
                 </ul>
             ) : (
-                <p>No hay tesis disponibles.</p>
+                <p className="text-center text-gray-500">No theses available.</p>
             )}
         </section>
     );

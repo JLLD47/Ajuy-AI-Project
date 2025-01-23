@@ -41,7 +41,7 @@ const Authors = () => {
     };
 
     const handleAuthorClick = (id) => {
-        navigate(`/autores/${id}`); //
+        navigate(`/author/${id}`); //
     };
 
     return (

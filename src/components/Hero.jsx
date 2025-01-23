@@ -25,7 +25,7 @@ const Hero = () => {
                         Universidades
                     </button>
 
-                    <button onClick={()=>navigate(`/autores/`)} className="bg-ajuyMid min-w-48 max-w-48 px-6 py-3 rounded text-ajuyWhite text-2xl hover:bg-ajuyWhite hover:text-ajuyMid">
+                    <button onClick={()=>navigate(`/author/`)} className="bg-ajuyMid min-w-48 max-w-48 px-6 py-3 rounded text-ajuyWhite text-2xl hover:bg-ajuyWhite hover:text-ajuyMid">
                         Autores
                     </button>
                 </div>

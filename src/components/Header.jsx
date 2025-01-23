@@ -17,7 +17,7 @@ const Header = () => {
                     <Link to="/" className="text-ajuyMid mx-2 hover:text-ajuyDark">
                         Home
                     </Link>
-                    <Link to="/autores" className="text-ajuyMid mx-2 hover:text-ajuyDark">
+                    <Link to="/author" className="text-ajuyMid mx-2 hover:text-ajuyDark">
                         Authors
                     </Link>
                     <button className="text-ajuyMid mx-2 hover:text-ajuyDark">Contact</button>

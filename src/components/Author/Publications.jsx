@@ -1,6 +1,5 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import pdf from "../../assets/pdf.png"
 
 // eslint-disable-next-line react/prop-types
 const Publications = ({publications}) => {
@@ -15,8 +14,12 @@ const Publications = ({publications}) => {
     };
 
     const redirectToProfile = (id) => {
-        navigate(`/autores/${id}`);
+        navigate(`/author/${id}`);
     };
+    const redirectToPublications = (id) => {
+        navigate(`/publication/${id}`);
+    };
+
 
     const parseAutores = (autoresArray) => {
         try {
@@ -33,7 +36,7 @@ const Publications = ({publications}) => {
     };
 
     return (
-        <section className="p-8 bg-gray-100">
+        <section className="p-8 bg-gray-100 rounded-2xl">
             {/* eslint-disable-next-line react/prop-types */}
             {publications.length > 0 ? (
                     <ul className="space-y-4 max-w-screen-xl mx-auto">
@@ -68,10 +71,16 @@ const Publications = ({publications}) => {
                                             <>
                                                 <h1 className="text-gray-700">Published:</h1>
 
-                                                <h4 className="text-gray-700">{pub.Fecha_de_publicación}</h4></>
+                                                <h4 className="text-gray-700">{pub.Fecha_de_publicación}</h4>
+                                                <svg  onClick={() => redirectToPublications(pub.id)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                </svg>
+                                            </>
+
                                         )}
                                     </div>
                                 )}
+
                             </li>
                         ))}
                     </ul>
