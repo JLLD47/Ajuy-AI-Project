@@ -8,7 +8,7 @@ import "./index.css";
 import {Project} from "./pages/Project.jsx";
 import {Publication} from "./pages/Publication.jsx";
 import {Thesis} from "./pages/Thesis.jsx";
-import Patent from "./pages/Patent.jsx";
+import {Patent} from "./pages/Patent.jsx";
 import {Universities} from "./pages/Universities.jsx";
 import Results from "./pages/Results.jsx";
 

@@ -1,8 +1,8 @@
 // Updated Theses.jsx
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
-const Theses = ({ theses }) => {
+const Theses = ({theses}) => {
     const [expanded, setExpanded] = useState({});
     const navigate = useNavigate();
 
@@ -15,6 +15,9 @@ const Theses = ({ theses }) => {
 
     const redirectToProfile = (id) => {
         navigate(`/autores/${id}`);
+    };
+    const redirectToThesis = (id) => {
+        navigate(`/thesis/${id}`);
     };
 
     const parseAutores = (autoresArray) => {
@@ -68,6 +71,12 @@ const Theses = ({ theses }) => {
                                     )}
                                 </div>
                             )}
+                            <button
+                                onClick={() => redirectToThesis(tesis.id)}
+                                className="mt-4 bg-ajuyMid text-white px-4 py-2 rounded-lg hover:bg-ajuyDark"
+                            >
+                                Ver proyecto
+                            </button>
                         </li>
                     ))}
                 </ul>

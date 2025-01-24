@@ -66,7 +66,7 @@ const Card = () => {
         fetchAllData();
     }, [id]);
 
-    if (loading) return <div className="text-white">Cargando...</div>;
+    if (loading) return <div className="text-black">Cargando...</div>;
     if (error) return <div className="text-red-500">Error: {error}</div>;
 
     const renderActiveComponent = () => {
@@ -92,7 +92,8 @@ const Card = () => {
             <div className="flex bg-cover bg-center h-60  "
                  style={{backgroundImage: `url(${bgImg})`}}>
                 <h1 className=" flex items-center font-bold text-4xl text-white ml-11 my-11"> {author.Nombre}</h1></div>
-            <div className="flex flex-col items-center  min-h-screen my-0 bg-ajuyWhite bg-gradient-to-t from-ajuyMid text-white">
+            <div
+                className="flex flex-col items-center  min-h-screen my-0 bg-ajuyWhite bg-gradient-to-t from-ajuyMid text-white">
 
 
                 <nav className="mt-10 flex space-x-4 ">

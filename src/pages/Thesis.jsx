@@ -1,26 +1,49 @@
+import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import Header from "../components/Header.jsx";
+import imgPDF from "../assets/pdf.png";
+import bgImage from "../assets/bg-hero.jpg";
+
 export const Thesis = () => {
-    return (
-        <></>
-    )
-}
-{/*
-import {useNavigate} from "react-router-dom";
+    const { id } = useParams();
+    const [thesis, setThesis] = useState(null);
+    const [error, setError] = useState(null);
+    let navigate = useNavigate();
 
+    const fetchThesis = async () => {
+        try {
+            const response = await fetch(`https://ajuy.onrender.com/tesis/${id}`);
+            if (!response.ok) throw new Error("Network response was not ok");
+            const data = await response.json();
+            setThesis(data || []);
+        } catch (err) {
+            console.error("Error fetching thesis:", err);
+            setError("Failed to load thesis.");
+        }
+    };
 
-const Theses = ({theses}) => {
+    useEffect(() => {
+        fetchThesis();
+    }, [id]);
 
-    const navigate = useNavigate();
-    const redirectToProfile = (id) => {
-        navigate(`/autores/${id}`);
+    if (error) {
+        return (
+            <>
+                <Header />
+                <div className="max-w-4xl mx-auto p-4 bg-red-100 shadow-lg rounded-lg">
+                    <h1 className="text-2xl font-bold text-red-800 mb-4">Error</h1>
+                    <p>{error}</p>
+                </div>
+            </>
+        );
     }
 
     const parseAutores = (autoresArray) => {
         try {
             return autoresArray.map((autor) => {
-                console.log("String original:", autor);
                 const corrected = autor
-                    .replace(/'/g, '"') // Cambia comillas simples por dobles
-                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"'); // Elimina ObjectId de manera segura
+                    .replace(/'/g, '"')
+                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"');
                 return JSON.parse(corrected);
             });
         } catch (error) {
@@ -29,56 +52,95 @@ const Theses = ({theses}) => {
         }
     };
 
+    if (!thesis) {
+        return (
+            <>
+                <Header />
+                <div className="max-w-4xl mx-auto p-4 bg-gray-100 shadow-lg rounded-lg">
+                    <p>Loading...</p>
+                </div>
+            </>
+        );
+    }
+
+    const redirectToProfile = (id) => {
+        navigate(`/author/${id}`);
+    };
 
     return (
-        <section className="mb-8">
-            <h2 className="text-2xl font-bold mb-4">Tesis</h2>
-            {theses.length > 0 ? (
-                <ul className="space-y-3">
-                    {theses.map((tesis) => (
-                        <li
-                            key={tesis.id}
-                            className="bg-blue-600 p-4 rounded-md hover:bg-blue-700 transition"
-                        >
-                            <h3 className="text-xl font-bold">{tesis.Título}</h3>
-                            <div className="mt-2">
-                                {parseAutores(tesis.Autores).map((aut, index) => (
-                                    <div key={index} className="text-green-950">
-                                        { aut.Autores && <p onClick={() => redirectToProfile(aut._id)}
-                                             className="text-lg font-bold hover:bg-sky-700">Autor: {aut.Autores}</p>}
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="mt-2">
-                                {parseAutores(tesis.Director).map((aut, index) => (
-                                    <div key={index} className="text-green-950">
-                                        <p onClick={() => redirectToProfile(aut._id)}
-                                           className="text-lg font-bold hover:bg-sky-700">Director: {aut.Nombre}</p>
-                                    </div>
-                                ))}
-                            </div>
-                            {tesis.clasificación_UNESCO && <h3>Clasificación UNESCO: {tesis.Clasificación_UNESCO}</h3>}
-                            {tesis.Colección && <h3>Colección: {tesis.Colección}</h3>}
-                            {tesis.Departamento && <h3>Departamento: {tesis.Departamento}</h3>}
-                            {tesis.Fecha_de_publicación && <h3>Fecha de publicación{tesis.Fecha_de_publicación}</h3>}
-                            {tesis.Descripción && <h3>Fuente: {tesis.Descripción}</h3>}
-                            {tesis.ISSN && <h3>ISSN: {tesis.ISSN}</h3>}
-                            {tesis.Palabras_clave && <h3>Palabras clave: {tesis.Palabras_clave}</h3>}
-                            {tesis.PDF && <h3>PDF: {tesis.PDF}</h3>}
-                            {tesis.Resumen && <h3 className="text-2xl text-accent">Resumen: {tesis.Resumen}</h3>}
-                            {tesis.PDF && <h3><a href={tesis.PDF} target="_blank">Link</a></h3>}
+        <><Header />
+            <img src={bgImage} className="w-screen max-h-80"></img>
+            <div className="bg-ajuyBkn bg-gradient-to-b from-ajuyWhite h-screen flex items-start pt-20">
 
 
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No hay tesis disponibles.</p>
-            )}
-        </section>
+            <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-lg">
+                <h1 className="text-xl font-bold text-gray-800 mb-4">
+                    {thesis.Título || "Sin título"}
+                </h1>
+                <table className="table-auto w-full border-collapse border border-gray-300">
+                    <tbody>
+                    <tr className="border-b">
+                        <td className="font-bold px-4 py-2">Summary</td>
+                        <td className="px-4 py-2">{thesis.Resumen || "No summary"}</td>
+                    </tr>
+                    <tr className="border-b">
+                        <td className="font-bold px-4 py-2">Date of publication</td>
+                        <td className="px-4 py-2">{thesis.Fecha_de_publicación || "Unknown"}</td>
+                    </tr>
+                    <tr className="border-b">
+                        <td className="font-bold px-4 py-2">Authors</td>
+                        <td className="px-4 py-2">
+                            <ul>
+                                {parseAutores(thesis.Autores).map((aut, index) => (
+                                    <li key={index}>
+                                            <span
+                                                onClick={() => redirectToProfile(aut._id)}
+                                                className="hover:underline text-blue-800 cursor-pointer"
+                                            >
+                                                {aut.Nombre}
+                                            </span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr className="border-b">
+                        <td className="font-bold px-4 py-2">UNESCO</td>
+                        <td className="px-4 py-2">{thesis.Clasificación_UNESCO || "Unknown"}</td>
+                    </tr>
+                    <tr className="border-b">
+                        <td className="font-bold px-4 py-2">Collection</td>
+                        <td className="px-4 py-2">{thesis.Collection || "Unknown"}</td>
+                    </tr>
+                    <tr className="border-b">
+                        <td className="font-bold px-4 py-2">Department</td>
+                        <td className="px-4 py-2">{thesis.Department || "Unknown"}</td>
+                    </tr>
+                    <tr className="border-b">
+                        <td className="font-bold px-4 py-2">Key words</td>
+                        <td className="px-4 py-2">{thesis.Palabras_Clave || "No keywords"}</td>
+                    </tr>
+                    <tr className="border-b">
+                        <td className="font-bold px-4 py-2">PDF</td>
+                        <td className="px-4 py-2">
+                            <a className="text-blue-600" href={thesis.PDF} target="_blank">
+                                <img className="h-12 inline" src={imgPDF} alt="pdf logo" />
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="font-bold px-4 py-2">Enlace a la tesis</td>
+                        <td className="px-4 py-2">
+                            <a className="text-blue-600" href={thesis.URI} target="_blank">
+                                Link to the thesis
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        </>
     );
 };
-
-export default Theses;
-
-*/}

@@ -9,6 +9,8 @@ const Results= () => {
         return <p>No se encontraron resultados para la búsqueda.</p>;
     }
 
+
+
     return (
         <div className="min-h-screen bg-ajuyBkn bg-gradient-to-b from-ajuyWhite">
             <Header />
@@ -20,7 +22,7 @@ const Results= () => {
                 {results.length === 0 ? (
                     <p className="text-gray-600">No se encontraron resultados.</p>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 gap-6">
                         {results.map((result) => (
                             <div
                                 key={result.id}
