@@ -1,3 +1,8 @@
+export const Project = () => {
+    return (
+        <></>
+    )
+}
 {/*
 import {useNavigate} from "react-router-dom";
 

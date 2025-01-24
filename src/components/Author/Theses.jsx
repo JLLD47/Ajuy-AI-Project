@@ -1,3 +1,4 @@
+// Updated Theses.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,8 +21,8 @@ const Theses = ({ theses }) => {
         try {
             return autoresArray.map((autor) => {
                 const corrected = autor
-                    .replace(/'/g, '"') // Replace single quotes with double quotes
-                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"'); // Safely remove ObjectId
+                    .replace(/'/g, '"')
+                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"');
                 return JSON.parse(corrected);
             });
         } catch (error) {
@@ -31,76 +32,39 @@ const Theses = ({ theses }) => {
     };
 
     return (
-        <section className="p-8 bg-gray-100 rounded-2xl">
-            <h2 className="text-2xl font-bold mb-4 text-ajuyDark">Theses</h2>
+        <section className="p-6 bg-gray-50 rounded-xl shadow-lg w-[90rem]">
             {theses.length > 0 ? (
-                <ul className="space-y-4 max-w-screen-xl mx-auto">
+                <ul className="space-y-6">
                     {theses.map((tesis) => (
                         <li
                             key={tesis.id}
-                            className="bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105"
+                            className="bg-white border border-gray-300 rounded-lg overflow-hidden shadow hover:shadow-md"
                         >
                             <h3
-                                className="bg-ajuyDark text-white text-xl font-bold p-4 rounded-t-lg cursor-pointer hover:bg-ajuyLight"
+                                className="bg-ajuyLight text-white text-lg font-semibold p-4 cursor-pointer hover:bg-ajuyMid"
                                 onClick={() => toggleExpand(tesis.id)}
                             >
                                 {tesis.Título}
                             </h3>
                             {expanded[tesis.id] && (
-                                <div className="p-4 bg-gray-200 rounded-b-lg text-ajuyDark">
-                                    <div>
+                                <div className="p-4">
+                                    <h4 className="text-gray-700 font-medium">Autores:</h4>
+                                    <ul className="space-y-2">
                                         {parseAutores(tesis.Autores).map((autor, index) => (
-                                            <div key={index} className="text-green-950">
-                                                {autor.Nombre && (
-                                                    <p
-                                                        onClick={() => redirectToProfile(autor._id)}
-                                                        className="text-lg font-bold hover:text-blue-600 cursor-pointer"
-                                                    >
-                                                        Author: {autor.Nombre}
-                                                    </p>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div>
-                                        {parseAutores(tesis.Director).map((director, index) => (
-                                            <div key={index} className="text-green-950">
-                                                <p
-                                                    onClick={() => redirectToProfile(director._id)}
-                                                    className="text-lg font-bold hover:text-blue-600 cursor-pointer"
+                                            <li key={index} className="text-blue-800">
+                                                <span
+                                                    onClick={() => redirectToProfile(autor._id)}
+                                                    className="hover:underline cursor-pointer"
                                                 >
-                                                    Supervisor: {director.Nombre}
-                                                </p>
-                                            </div>
+                                                    {autor.Nombre}
+                                                </span>
+                                            </li>
                                         ))}
-                                    </div>
-                                    {tesis.clasificación_UNESCO && (
-                                        <h4 className="text-gray-700">
-                                            UNESCO Classification: {tesis.clasificación_UNESCO}
-                                        </h4>
-                                    )}
-                                    {tesis.Departamento && (
-                                        <h4 className="text-gray-700">Department: {tesis.Departamento}</h4>
-                                    )}
+                                    </ul>
                                     {tesis.Fecha_de_publicación && (
-                                        <h4 className="text-gray-700">
-                                            Publication Date: {tesis.Fecha_de_publicación}
-                                        </h4>
-                                    )}
-                                    {tesis.Resumen && (
-                                        <h4 className="text-gray-700">Summary: {tesis.Resumen}</h4>
-                                    )}
-                                    {tesis.PDF && (
-                                        <h4 className="text-gray-700">
-                                            PDF:{" "}
-                                            <a
-                                                href={tesis.PDF}
-                                                target="_blank"
-                                                className="text-blue-600 hover:underline"
-                                            >
-                                                View PDF
-                                            </a>
-                                        </h4>
+                                        <p className="text-gray-600 mt-2">
+                                            <strong>Fecha de publicación:</strong> {tesis.Fecha_de_publicación}
+                                        </p>
                                     )}
                                 </div>
                             )}
@@ -108,7 +72,7 @@ const Theses = ({ theses }) => {
                     ))}
                 </ul>
             ) : (
-                <p className="text-center text-gray-500">No theses available.</p>
+                <p className="text-center text-gray-500">No hay tesis disponibles.</p>
             )}
         </section>
     );

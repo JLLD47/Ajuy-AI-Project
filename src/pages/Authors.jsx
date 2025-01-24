@@ -45,7 +45,7 @@ const Authors = () => {
     };
 
     return (
-        <div className="min-h-screen my-0 bg-ajuyLight bg-gradient-to-t from-ajuyMid text-white">
+        <div className="min-h-screen my-0 bg-ajuyWhite bg-gradient-to-t from-ajuyMid text-black">
             <Header />
             <div
                 className="bg-cover bg-center min-h-52 flex flex-col justify-center"
@@ -57,7 +57,7 @@ const Authors = () => {
                     <div
                         key={author.id || index}
                         className="animate__animated animate__slideInLeft  bg-white p-4 rounded-md flex items-center space-x-4 hover:bg-ajuyDark hover:text-white transition cursor-pointer"
-                        onClick={() => handleAuthorClick(author.id)}
+                            onClick={() => handleAuthorClick(author.id)}
                     >
                         <img src={avatar} alt="avatar" className="h-12 w-12 rounded-full" />
                         <div>

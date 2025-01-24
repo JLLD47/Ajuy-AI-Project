@@ -5,7 +5,7 @@ import Stats from "./components/Stats";
 
 const App = () => {
     return (
-        <div className="bg-black text-white min-h-screen">
+        <div className="bg-black text-black min-h-screen">
             <Header />
             <Hero />
             <Stats />

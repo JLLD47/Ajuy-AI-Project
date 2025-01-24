@@ -1,3 +1,8 @@
+export const Publication = () => {
+    return (
+        <></>
+    )
+}
 {/* import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import pdf from "../../assets/pdf.png"

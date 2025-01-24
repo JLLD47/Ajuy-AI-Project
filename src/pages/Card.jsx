@@ -89,15 +89,15 @@ const Card = () => {
     return (
         <div className="bg-ajuyWhite">
             <Header/>
-            <div className="flex bg-cover bg-center h-60"
+            <div className="flex bg-cover bg-center h-60  "
                  style={{backgroundImage: `url(${bgImg})`}}>
                 <h1 className=" flex items-center font-bold text-4xl text-white ml-11 my-11"> {author.Nombre}</h1></div>
-            <div className="flex flex-col items-center  min-h-screen my-0 bg-ajuyWhite text-white">
+            <div className="flex flex-col items-center  min-h-screen my-0 bg-ajuyWhite bg-gradient-to-t from-ajuyMid text-white">
 
 
-                <nav className="mt-10 flex space-x-4">
+                <nav className="mt-10 flex space-x-4 ">
                     <button
-                        className={`px-4 py-2 rounded ${
+                        className={`px-4 py-2 rounded w-[10rem] mb-3.5 ${
                             activeComponent === "Profile" ? "bg-ajuyDark" : "bg-ajuyLight"
                         }`}
                         onClick={() => setActiveComponent("Profile")}
@@ -105,7 +105,7 @@ const Card = () => {
                         Info
                     </button>
                     <button
-                        className={`px-4 py-2 rounded ${
+                        className={`px-4 py-2 rounded w-[10rem] mb-3.5 ${
                             activeComponent === "Projects" ? "bg-ajuyDark" : "bg-ajuyLight"
                         }`}
                         onClick={() => setActiveComponent("Projects")}
@@ -113,7 +113,7 @@ const Card = () => {
                         Proyectos
                     </button>
                     <button
-                        className={`px-4 py-2 rounded ${
+                        className={`px-4 py-2 rounded w-[10rem] mb-3.5 ${
                             activeComponent === "Publications" ? "bg-ajuyDark" : "bg-ajuyLight"
                         }`}
                         onClick={() => setActiveComponent("Publications")}
@@ -121,7 +121,7 @@ const Card = () => {
                         Publicaciones
                     </button>
                     <button
-                        className={`px-4 py-2 rounded ${
+                        className={`px-4 py-2 rounded w-[10rem] mb-3.5 ${
                             activeComponent === "Theses" ? "bg-ajuyDark" : "bg-ajuyLight"
                         }`}
                         onClick={() => setActiveComponent("Theses")}
@@ -129,7 +129,7 @@ const Card = () => {
                         Tesis
                     </button>
                     <button
-                        className={`px-4 py-2 rounded ${
+                        className={`px-4 py-2 rounded w-[10rem] mb-3.5 ${
                             activeComponent === "Patents" ? "bg-ajuyDark" : "bg-ajuyLight"
                         }`}
                         onClick={() => setActiveComponent("Patents")}

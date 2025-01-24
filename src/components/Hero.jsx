@@ -21,12 +21,12 @@ const Hero = () => {
                 </h2>
                 <div className="flex justify-center space-x-8 mt-10">
 
-                    <button className="bg-ajuyMid min-w-48 max-w-48 px-6 py-3 rounded text-ajuyWhite text-2xl hover:bg-ajuyWhite hover:text-ajuyMid">
-                        Universidades
+                    <button onClick={()=>navigate(`/universities/`)} className="bg-ajuyMid min-w-48 max-w-48 px-6 py-3 rounded text-ajuyWhite text-2xl hover:bg-ajuyWhite hover:text-ajuyMid">
+                        Universities
                     </button>
 
                     <button onClick={()=>navigate(`/author/`)} className="bg-ajuyMid min-w-48 max-w-48 px-6 py-3 rounded text-ajuyWhite text-2xl hover:bg-ajuyWhite hover:text-ajuyMid">
-                        Autores
+                        Authors
                     </button>
                 </div>
             </section>

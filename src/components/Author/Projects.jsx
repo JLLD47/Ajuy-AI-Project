@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -24,8 +25,8 @@ const Projects = ({ projects }) => {
         try {
             return autoresArray.map((autor) => {
                 const corrected = autor
-                    .replace(/'/g, '"') // Cambia comillas simples por dobles
-                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"'); // Elimina ObjectId de manera segura
+                    .replace(/'/g, '"')
+                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"');
                 return JSON.parse(corrected);
             });
         } catch (error) {
@@ -35,64 +36,46 @@ const Projects = ({ projects }) => {
     };
 
     return (
-        <section className="p-8 bg-gray-100 rounded-2xl">
-            <h2 className="text-2xl font-bold mb-4 text-ajuyDark">Proyectos</h2>
+        <section className="p-6 bg-gray-50 rounded-xl shadow-lg w-[90rem]">
             {projects.length > 0 ? (
-                <ul className="space-y-4 max-w-screen-xl mx-auto">
+                <ul className="space-y-6">
                     {projects.map((project) => (
                         <li
                             key={project.id}
-                            className="bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105"
+                            className="bg-white border border-gray-300 rounded-lg overflow-hidden shadow hover:shadow-md"
                         >
                             <h3
-                                className="bg-ajuyDark text-white text-xl font-bold p-4 rounded-t-lg cursor-pointer hover:bg-ajuyLight"
+                                className="bg-ajuyLight text-white text-lg font-semibold p-4 cursor-pointer hover:bg-ajuyMid"
                                 onClick={() => toggleExpand(project.id)}
                             >
                                 {project.Título}
                             </h3>
                             {expanded[project.id] && (
-                                <div className="p-4 bg-gray-200 rounded-b-lg text-ajuyDark">
-                                    <div className="text-ajuyMid"> Researchers:</div>
-                                    {parseAutores(project.Investigadores).map((aut, index) => (
-                                        <div key={index} className="text-green-950">
-                                            {aut.Nombre && (
-                                                <p
+                                <div className="p-4">
+                                    <h4 className="text-gray-700 font-medium">Investigadores:</h4>
+                                    <ul className="space-y-2">
+                                        {parseAutores(project.Investigadores).map((aut, index) => (
+                                            <li key={index} className="text-blue-800">
+                                                <span
                                                     onClick={() => redirectToProfile(aut._id)}
-                                                    className="text-lg font-bold hover:text-blue-600 cursor-pointer"
+                                                    className="hover:underline cursor-pointer"
                                                 >
                                                     {aut.Nombre}
-                                                </p>
-                                            )}
-                                        </div>
-                                    ))}
-
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
                                     {project.Fecha_de_inicio && (
-                                        <h4 className="text-gray-700">
-                                            Fecha de inicio: {project.Fecha_de_inicio}
-                                        </h4>
+                                        <p className="text-gray-600 mt-2">
+                                            <strong>Fecha de inicio:</strong> {project.Fecha_de_inicio}
+                                        </p>
                                     )}
-
-                                    {project.Referencia && (
-                                        <h4 className="text-gray-700">Referencia: {project.Referencia}</h4>
-                                    )}
-                                    {project.Tipo && (
-                                        <h4 className="text-gray-700">Tipo: {project.Tipo}</h4>
-                                    )}
-                                    <svg
+                                    <button
                                         onClick={() => redirectToProject(project.id)}
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth={1.5}
-                                        stroke="currentColor"
-                                        className="w-6 h-6 mt-2 cursor-pointer hover:text-blue-600"
+                                        className="mt-4 bg-ajuyMid text-white px-4 py-2 rounded-lg hover:bg-ajuyDark"
                                     >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                                        />
-                                    </svg>
+                                        Ver proyecto
+                                    </button>
                                 </div>
                             )}
                         </li>
@@ -104,5 +87,4 @@ const Projects = ({ projects }) => {
         </section>
     );
 };
-
 export default Projects;

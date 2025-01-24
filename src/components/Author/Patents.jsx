@@ -17,61 +17,57 @@ const Patents = ({ patents }) => {
     };
 
     return (
-        <section className="p-8 bg-gray-100 rounded-2xl">
-            <h2 className="text-2xl font-bold mb-4 text-ajuyDark">Patents</h2>
+        <section className="p-6 bg-gray-50 rounded-xl shadow-lg w-[90rem]">
             {patents.length > 0 ? (
-                <ul className="space-y-4 max-w-screen-xl mx-auto">
+                <ul className="space-y-6">
                     {patents.map((patent) => (
                         <li
                             key={patent.id}
-                            className="bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105"
+                            className="bg-white border border-gray-300 rounded-lg overflow-hidden shadow hover:shadow-md"
                         >
                             <h3
-                                className="bg-ajuyDark text-white text-xl font-bold p-4 rounded-t-lg cursor-pointer hover:bg-ajuyLight"
+                                className="bg-ajuyLight text-white text-lg font-semibold p-4 cursor-pointer hover:bg-ajuyMid"
                                 onClick={() => toggleExpand(patent.id)}
                             >
                                 {patent.Título}
                             </h3>
                             {expanded[patent.id] && (
-                                <div className="p-4 bg-gray-200 rounded-b-lg text-ajuyDark">
+                                <div className="p-4">
                                     {patent.Descripción && (
-                                        <p className="text-gray-700 mb-2">Description: {patent.Descripción}</p>
+                                        <p className="text-gray-700 mb-2">{patent.Descripción}</p>
                                     )}
                                     {patent.Inventores && (
                                         <p className="text-gray-700 mb-2">
-                                            Inventors: {patent.Inventores.join(", ")}
+                                            <strong>Inventores:</strong> {patent.Inventores.join(", ")}
                                         </p>
                                     )}
                                     {patent.Fecha_de_publicación && (
-                                        <p className="text-gray-700 mb-2">
-                                            Publication Date: {patent.Fecha_de_publicación}
+                                        <p className="text-gray-600 mt-2">
+                                            <strong>Fecha de publicación:</strong> {patent.Fecha_de_publicación}
                                         </p>
                                     )}
-                                    <svg
+                                    <button
                                         onClick={() => redirectToPatent(patent.id)}
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth={1.5}
-                                        stroke="currentColor"
-                                        className="w-6 h-6 mt-2 cursor-pointer hover:text-blue-600"
+                                        className="mt-4 bg-ajuyMid text-white px-4 py-2 rounded-lg hover:bg-ajuyDark"
                                     >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                                        />
-                                    </svg>
+                                        Ver patente
+                                    </button>
                                 </div>
                             )}
                         </li>
                     ))}
                 </ul>
             ) : (
-                <p className="text-center text-gray-500">No patents available.</p>
+                <p className="text-center text-gray-500">No hay patentes disponibles.</p>
             )}
         </section>
     );
 };
 
 export default Patents;
+
+
+
+
+
+

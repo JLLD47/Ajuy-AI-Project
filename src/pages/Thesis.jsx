@@ -1,3 +1,8 @@
+export const Thesis = () => {
+    return (
+        <></>
+    )
+}
 {/*
 import {useNavigate} from "react-router-dom";
 

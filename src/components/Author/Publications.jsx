@@ -1,8 +1,7 @@
-import {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-// eslint-disable-next-line react/prop-types
-const Publications = ({publications}) => {
+const Publications = ({ publications }) => {
     const [expanded, setExpanded] = useState({});
     const navigate = useNavigate();
 
@@ -16,17 +15,17 @@ const Publications = ({publications}) => {
     const redirectToProfile = (id) => {
         navigate(`/author/${id}`);
     };
+
     const redirectToPublications = (id) => {
         navigate(`/publication/${id}`);
     };
-
 
     const parseAutores = (autoresArray) => {
         try {
             return autoresArray.map((autor) => {
                 const corrected = autor
-                    .replace(/'/g, '"') // Cambia comillas simples por dobles
-                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"'); // Elimina ObjectId de manera segura
+                    .replace(/'/g, '"')
+                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"');
                 return JSON.parse(corrected);
             });
         } catch (error) {
@@ -36,63 +35,58 @@ const Publications = ({publications}) => {
     };
 
     return (
-        <section className="p-8 bg-gray-100 rounded-2xl">
-            {/* eslint-disable-next-line react/prop-types */}
+        <section className="p-6 bg-gray-50 rounded-xl shadow-lg w-[90rem]">
             {publications.length > 0 ? (
-                    <ul className="space-y-4 max-w-screen-xl mx-auto">
-                        {/* eslint-disable-next-line react/prop-types */}
-                        {publications.map((pub) => (
-                            <li
-                                key={pub.id}
-                                className="bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:scale-105"
+                <ul className="space-y-6">
+                    {publications.map((pub) => (
+                        <li
+                            key={pub.id}
+                            className="bg-white border border-gray-300 rounded-lg overflow-hidden shadow hover:shadow-md"
+                        >
+                            <h3
+                                className="bg-ajuyLight text-white text-lg font-semibold p-4 cursor-pointer hover:bg-ajuyMid"
+                                onClick={() => toggleExpand(pub.id)}
                             >
-                                <h3
-                                    className="bg-ajuyDark text-white text-xl font-bold p-4 rounded-t-lg cursor-pointer hover:bg-ajuyLight"
-                                    onClick={() => toggleExpand(pub.id)}
-                                >
-                                    {pub.Título}
-                                </h3>
-                                {expanded[pub.id] && (
-                                    <div className="p-4 bg-gray-200 rounded-b-lg text-ajuyDark">Autores:
+                                {pub.Título}
+                            </h3>
+                            {expanded[pub.id] && (
+                                <div className="p-4">
+                                    <h4 className="text-gray-700 font-medium">Autores:</h4>
+                                    <ul className="space-y-2">
                                         {parseAutores(pub.Autores).map((aut, index) => (
-                                            <div key={index} className="text-green-950">
-                                                {aut.Nombre && (
-                                                    <p
-                                                        onClick={() => redirectToProfile(aut._id)}
-                                                        className="text-lg font-bold hover:text-blue-600 cursor-pointer"
-                                                    >
-                                                        {aut.Nombre}
-                                                    </p>
-                                                )}
-                                            </div>
+                                            <li key={index} className="text-blue-800">
+                                                <span
+                                                    onClick={() => redirectToProfile(aut._id)}
+                                                    className="hover:underline cursor-pointer"
+                                                >
+                                                    {aut.Nombre}
+                                                </span>
+                                            </li>
                                         ))}
-
-                                        {pub.Fecha_de_publicación && (
-                                            <>
-                                                <h1 className="text-gray-700">Published:</h1>
-
-                                                <h4 className="text-gray-700">{pub.Fecha_de_publicación}</h4>
-                                                <svg  onClick={() => redirectToPublications(pub.id)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                                </svg>
-                                            </>
-
-                                        )}
-                                    </div>
-                                )}
-
-                            </li>
-                        ))}
-                    </ul>
-                )
-                :
-                (
-                    <p className="text-center text-gray-500">No hay publicaciones disponibles.</p>
-                )
-            }
+                                    </ul>
+                                    {pub.Fecha_de_publicación && (
+                                        <p className="text-gray-600 mt-2">
+                                            <strong>Publicado:</strong> {pub.Fecha_de_publicación}
+                                        </p>
+                                    )}
+                                    <button
+                                        onClick={() => redirectToPublications(pub.id)}
+                                        className="mt-4 bg-ajuyMid text-white px-4 py-2 rounded-lg hover:bg-ajuyDark"
+                                    >
+                                        Ver publicación
+                                    </button>
+                                </div>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="text-center text-gray-500">
+                    No hay publicaciones disponibles.
+                </p>
+            )}
         </section>
-    )
-        ;
+    );
 };
 
 export default Publications;
