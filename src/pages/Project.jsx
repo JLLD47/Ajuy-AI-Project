@@ -1,13 +1,9 @@
-// Updated content for Patent.jsx, Project.jsx, and Publication.jsx
 
-// Note: This will include consistent styling changes following the Thesis.jsx template.
-
-// --- Project.jsx ---
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "../components/Header.jsx";
-import imgPDF from "../assets/pdf.png";
 import bgImage from "../assets/bg-hero.jpg";
+import {parseAutores, cleanText} from "../utils.js";
 
 export const Project = () => {
     const { id } = useParams();
@@ -17,7 +13,7 @@ export const Project = () => {
 
     const fetchProject = async () => {
         try {
-            const response = await fetch(`https://ajuy.onrender.com/proyectos/${id}`);
+            const response = await fetch(`http://127.0.0.1:8000/proyectos/${id}`);
             if (!response.ok) throw new Error("Network response was not ok");
             const data = await response.json();
             setProject(data || []);
@@ -25,6 +21,9 @@ export const Project = () => {
             console.error("Error fetching project:", err);
             setError("Failed to load project.");
         }
+    };
+    const redirectToProfile = (id) => {
+        navigate(`/author/${id}`);
     };
 
     useEffect(() => {
@@ -43,24 +42,6 @@ export const Project = () => {
         );
     }
 
-    const parseAutores = (autoresArray) => {
-        try {
-            return autoresArray.map((autor) => {
-                const corrected = autor
-                    .replace(/'/g, '"')
-                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"');
-                return JSON.parse(corrected);
-            });
-        } catch (error) {
-            console.error("Error parsing authors:", error);
-            return [];
-        }
-    };
-
-    const redirectToProfile = (id) => {
-        navigate(`/author/${id}`);
-    };
-
     if (!project) {
         return (
             <>
@@ -74,9 +55,11 @@ export const Project = () => {
 
     return (
         <>
-            <Header />
-            <img src={bgImage} className="w-screen max-h-80"></img>
-
+            <Header isFixed={false} />
+            <div
+                className="h-[20rem] bg-cover bg-center"
+                style={{ backgroundImage: `url(${bgImage})` }}
+            ></div>
             <div className="bg-ajuyBkn bg-gradient-to-b from-ajuyWhite h-screen flex items-start pt-20">
                 <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-lg">
                     <h1 className="text-xl font-bold text-gray-800 mb-4">
@@ -111,7 +94,7 @@ export const Project = () => {
                         </tr>
                         <tr className="border-b">
                             <td className="font-bold px-4 py-2">Funding Organization</td>
-                            <td className="px-4 py-2">{project.Organismo_financiador || "Unknown"}</td>
+                            <td className="px-4 py-2">{project.organismo_financiador || "Unknown"}</td>
                         </tr>
                         <tr className="border-b">
                             <td className="font-bold px-4 py-2">Reference</td>
@@ -120,7 +103,7 @@ export const Project = () => {
                         <tr>
                             <td className="font-bold px-4 py-2">Project URL</td>
                             <td className="px-4 py-2">
-                                <a className="text-blue-600" href={project.URL_del_proyecto} target="_blank">
+                                <a className="text-blue-600" href={cleanText(project.URL_del_proyecto)} target="_blank">
                                     Link to the project
                                 </a>
                             </td>

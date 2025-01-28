@@ -1,27 +1,51 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header.jsx";
+import bgImage from "../assets/bg-hero.jpg";
 
-const Results= () => {
+const Results = () => {
     const location = useLocation();
     const { results } = location.state || {};
+    const navigate = useNavigate();
+
+    const handleRedirect = (id, tipo) => {
+        switch (tipo) {
+            case "tesis":
+                navigate(`/thesis/${id}`);
+                break;
+            case "proyecto":
+                navigate(`/project/${id}`);
+                break;
+            case "patentes":
+                navigate(`/patent/${id}`);
+                break;
+            case "publicaciones":
+                navigate(`/publication/${id}`);
+                break;
+            default:
+                console.error("Tipo desconocido:", tipo);
+        }
+    };
 
     if (!results) {
         return <p>No se encontraron resultados para la búsqueda.</p>;
     }
 
-
-
     return (
         <div className="min-h-screen bg-ajuyBkn bg-gradient-to-b from-ajuyWhite">
             <Header />
+            <div
+                className="h-[20rem] bg-cover bg-center"
+                style={{ backgroundImage: `url(${bgImage})` }}
+            ></div>
             <div className="max-w-7xl mx-auto py-6 px-4">
                 <h1 className="text-3xl font-bold text-gray-800 mb-6">
-                    Resultados de la búsqueda
+Search Results
                 </h1>
 
                 {results.length === 0 ? (
-                    <p className="text-gray-600">No se encontraron resultados.</p>
+                    <p className="text-gray-600">No results.</p>
                 ) : (
+
                     <div className="grid grid-cols-1 gap-6">
                         {results.map((result) => (
                             <div
@@ -35,34 +59,18 @@ const Results= () => {
                                     {result.resumen}
                                 </p>
                                 <p className="text-sm text-gray-600 mb-2">
-                                    <strong>Tipo:</strong> {result.tipo}
+                                    <strong>Tipe:</strong> {result.tipo}
                                 </p>
                                 <p className="text-sm text-gray-600 mb-2">
-                                    <strong>Autores:</strong>{" "}
+                                    <strong>Author:</strong>{" "}
                                     {result.autores.map((autor) => autor.nombre).join(", ")}
                                 </p>
-                                {result.palabras_clave && result.palabras_clave.length > 0 ? (
-                                    <p className="text-sm text-gray-600 mb-2">
-                                        <strong>Palabras clave:</strong>{" "}
-                                        {result.palabras_clave.join(", ")}
-                                    </p>
-                                ) : (
-                                    <p className="text-sm text-gray-600 mb-2">
-                                        <strong>Palabras clave:</strong> N/A
-                                    </p>
-                                )}
-                                <p className="text-sm text-gray-600 mb-2">
-                                    <strong>Fecha de publicación:</strong>{" "}
-                                    {result.fecha_publicacion || "Desconocida"}
-                                </p>
-                                <a
-                                    href={result.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                <button
+                                    onClick={() => handleRedirect(result.id, result.tipo)}
                                     className="text-blue-600 text-sm font-medium hover:underline"
                                 >
-                                    Ver más
-                                </a>
+                                    See more.
+                                </button>
                             </div>
                         ))}
                     </div>
@@ -71,6 +79,5 @@ const Results= () => {
         </div>
     );
 };
-
 
 export default Results;

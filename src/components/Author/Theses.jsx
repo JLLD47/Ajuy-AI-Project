@@ -1,6 +1,7 @@
 // Updated Theses.jsx
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {parseAutores, cleanText} from "../../utils.js";
 
 const Theses = ({theses}) => {
     const [expanded, setExpanded] = useState({});
@@ -12,27 +13,14 @@ const Theses = ({theses}) => {
             [id]: !prev[id],
         }));
     };
-
     const redirectToProfile = (id) => {
-        navigate(`/autores/${id}`);
+        navigate(`/author/${id}`);
     };
+
     const redirectToThesis = (id) => {
         navigate(`/thesis/${id}`);
     };
 
-    const parseAutores = (autoresArray) => {
-        try {
-            return autoresArray.map((autor) => {
-                const corrected = autor
-                    .replace(/'/g, '"')
-                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"');
-                return JSON.parse(corrected);
-            });
-        } catch (error) {
-            console.error("Error parsing authors:", error);
-            return [];
-        }
-    };
 
     return (
         <section className="p-6 bg-gray-50 rounded-xl shadow-lg w-[90rem]">
@@ -51,7 +39,7 @@ const Theses = ({theses}) => {
                             </h3>
                             {expanded[tesis.id] && (
                                 <div className="p-4">
-                                    <h4 className="text-gray-700 font-medium">Autores:</h4>
+                                    <h4 className="text-gray-700 font-medium">Authors:</h4>
                                     <ul className="space-y-2">
                                         {parseAutores(tesis.Autores).map((autor, index) => (
                                             <li key={index} className="text-blue-800">
@@ -66,17 +54,17 @@ const Theses = ({theses}) => {
                                     </ul>
                                     {tesis.Fecha_de_publicación && (
                                         <p className="text-gray-600 mt-2">
-                                            <strong>Fecha de publicación:</strong> {tesis.Fecha_de_publicación}
+                                            <strong>Published:</strong> {tesis.Fecha_de_publicación}
                                         </p>
                                     )}
+                                    <button
+                                        onClick={() => redirectToThesis(tesis.id)}
+                                        className="mt-4 bg-ajuyMid text-white px-4 py-2 rounded-lg hover:bg-ajuyDark"
+                                    >
+                                        View Publication
+                                    </button>
                                 </div>
                             )}
-                            <button
-                                onClick={() => redirectToThesis(tesis.id)}
-                                className="mt-4 bg-ajuyMid text-white px-4 py-2 rounded-lg hover:bg-ajuyDark"
-                            >
-                                Ver proyecto
-                            </button>
                         </li>
                     ))}
                 </ul>

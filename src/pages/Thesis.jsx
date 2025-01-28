@@ -3,16 +3,19 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header.jsx";
 import imgPDF from "../assets/pdf.png";
 import bgImage from "../assets/bg-hero.jpg";
+import {cleanText, parseAutores} from "../utils.js";
 
 export const Thesis = () => {
     const { id } = useParams();
     const [thesis, setThesis] = useState(null);
     const [error, setError] = useState(null);
-    let navigate = useNavigate();
+    const navigate = useNavigate();
+
+
 
     const fetchThesis = async () => {
         try {
-            const response = await fetch(`https://ajuy.onrender.com/tesis/${id}`);
+            const response = await fetch(`http://127.0.0.1:8000/tesis/${id}`);
             if (!response.ok) throw new Error("Network response was not ok");
             const data = await response.json();
             setThesis(data || []);
@@ -21,6 +24,11 @@ export const Thesis = () => {
             setError("Failed to load thesis.");
         }
     };
+
+    const redirectToProfile = (id) => {
+        navigate(`/author/${id}`);
+    };
+
 
     useEffect(() => {
         fetchThesis();
@@ -38,20 +46,6 @@ export const Thesis = () => {
         );
     }
 
-    const parseAutores = (autoresArray) => {
-        try {
-            return autoresArray.map((autor) => {
-                const corrected = autor
-                    .replace(/'/g, '"')
-                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"');
-                return JSON.parse(corrected);
-            });
-        } catch (error) {
-            console.error("Error al parsear autores:", error);
-            return [];
-        }
-    };
-
     if (!thesis) {
         return (
             <>
@@ -63,17 +57,15 @@ export const Thesis = () => {
         );
     }
 
-    const redirectToProfile = (id) => {
-        navigate(`/author/${id}`);
-    };
-
     return (
         <><Header />
-            <img src={bgImage} className="w-screen max-h-80"></img>
-            <div className="bg-ajuyBkn bg-gradient-to-b from-ajuyWhite h-screen flex items-start pt-20">
+            <div
+                className="h-[20rem] bg-cover bg-center"
+                style={{ backgroundImage: `url(${bgImage})` }}
+            ></div>            <div className="bg-ajuyBkn bg-gradient-to-b from-ajuyWhite h-screen flex items-start pt-20">
 
 
-            <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-lg">
+            <div className="max-w-6xl mx-auto p-4 bg-white shadow-lg rounded-lg">
                 <h1 className="text-xl font-bold text-gray-800 mb-4">
                     {thesis.Título || "Sin título"}
                 </h1>
@@ -81,7 +73,7 @@ export const Thesis = () => {
                     <tbody>
                     <tr className="border-b">
                         <td className="font-bold px-4 py-2">Summary</td>
-                        <td className="px-4 py-2">{thesis.Resumen || "No summary"}</td>
+                        <td className="px-4 py-2 break-words">{thesis.Resumen || "No summary"}</td>
                     </tr>
                     <tr className="border-b">
                         <td className="font-bold px-4 py-2">Date of publication</td>
@@ -110,15 +102,15 @@ export const Thesis = () => {
                     </tr>
                     <tr className="border-b">
                         <td className="font-bold px-4 py-2">Collection</td>
-                        <td className="px-4 py-2">{thesis.Collection || "Unknown"}</td>
+                        <td className="px-4 py-2">{thesis.Colección || "Unknown"}</td>
                     </tr>
                     <tr className="border-b">
                         <td className="font-bold px-4 py-2">Department</td>
-                        <td className="px-4 py-2">{thesis.Department || "Unknown"}</td>
+                        <td className="px-4 py-2 break-words">{cleanText(thesis.Departamento) || "Unknown"}</td>
                     </tr>
                     <tr className="border-b">
                         <td className="font-bold px-4 py-2">Key words</td>
-                        <td className="px-4 py-2">{thesis.Palabras_Clave || "No keywords"}</td>
+                        <td className="px-4 py-2">{thesis.Palabras_clave || "No keywords"}</td>
                     </tr>
                     <tr className="border-b">
                         <td className="font-bold px-4 py-2">PDF</td>
@@ -131,7 +123,7 @@ export const Thesis = () => {
                     <tr>
                         <td className="font-bold px-4 py-2">Enlace a la tesis</td>
                         <td className="px-4 py-2">
-                            <a className="text-blue-600" href={thesis.URI} target="_blank">
+                            <a className="text-blue-600" href={cleanText(thesis.URI)} target="_blank">
                                 Link to the thesis
                             </a>
                         </td>

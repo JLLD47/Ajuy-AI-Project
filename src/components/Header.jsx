@@ -1,44 +1,19 @@
-import {Link, useNavigate} from "react-router-dom";
-import {useState} from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import logoIcon from "../assets/logo.png";
 
-const Header = () => {
+const Header = ({ isFixed = false }) => {
     const [searchInput, setSearchInput] = useState("");
+    const [errorMessage, setErrorMessage] = useState(null);
     const navigate = useNavigate();
-
-    function cleanApiResponse(data) {
-        const cleanedResults = data.resultados.map((resultado) => {
-            return {
-                id: resultado.id,
-                titulo: resultado.titulo,
-                tipo: resultado.tipo,
-                resumen: resultado.resumen.replace(/\r\n/g, ' ').trim(),
-                autores: resultado.autores.map((autor) => ({
-                    id: autor.id.replace(/ \(.*?\)/g, ''), // Limpia "Link: ..." del ID
-                    nombre: autor.nombre
-                })),
-                score: resultado.score,
-                relevancia: resultado.relevancia,
-                palabras_clave: resultado.palabras_clave || [], // Asegura que siempre sea un array
-                fecha_publicacion: resultado.fecha_publicacion,
-                url: resultado.url.split(' ')[0] // Limpia "Link: ..." para quedarse solo con la URL
-            };
-        });
-
-        return {
-            total: data.total,
-            resultados: cleanedResults,
-            tiempo_busqueda: data.tiempo_busqueda,
-            consulta_procesada: data.consulta_procesada
-        };
-    }
 
     const handleSearch = async (e) => {
         if (e.key === "Enter" && searchInput.trim() !== "") {
+            setErrorMessage(null); // Clear any existing error messages
             try {
                 const encodedQuery = encodeURIComponent(searchInput.trim());
-                const apiUrl = `https://grab-lauren-gotten-type.trycloudflare.com/search/?query=${encodedQuery}`;
-                console.log("Llamando a la API:", apiUrl);
+                const apiUrl = `https://nathan-administrators-rec-gods.trycloudflare.com/nlp-search/?query=${encodedQuery}`;
+                console.log("Calling API:", apiUrl);
 
                 const response = await fetch(apiUrl, {
                     method: "GET",
@@ -47,44 +22,40 @@ const Header = () => {
                     },
                 });
 
-                const contentType = response.headers.get("content-type");
-
-                let data;
-                if (contentType && contentType.includes("application/json")) {
-                    data = await response.json();
-                    navigate("/results", { state: { results: data.resultados, query: searchInput.trim() } });
-                } else {
-                    const textData = await response.text();
-                    try {
-                        data = JSON.parse(textData); // Intentar parsear el texto como JSON
-                    } catch (error) {
-                        console.error("Error al convertir texto a JSON:", textData);
-                        throw new Error("La respuesta no es un JSON válido.");
-                    }
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.statusText}`);
                 }
 
-                console.log("Datos procesados:", data);
+                const contentType = response.headers.get("content-type");
+                let data;
+
+                if (contentType && contentType.includes("application/json")) {
+                    data = await response.json();
+                } else {
+                    const textData = await response.text();
+                    data = JSON.parse(textData); // Attempt to parse
+                }
+
+                navigate("/results", { state: { results: data.resultados, query: searchInput.trim() } });
+                console.log("Processed Data:", data);
             } catch (error) {
-                console.error("Error al buscar datos:", error.message);
+                console.error("Search Error:", error.message);
+                setErrorMessage("An error occurred while fetching results. Please try again.");
             }
         }
     };
 
-
-
-
-
-
-
     return (
-        <header className="my-0 h-4 flex justify-between items-center p-5 bg-ajuyWhite">
+        <header
+            className={`my-0 h-4 flex justify-between items-center p-5 bg-ajuyWhite ${
+                isFixed ? "fixed w-full top-0 z-50 bg-opacity-80" : ""
+            }`}
+        >
             <div className="flex items-center space-x-4">
-                <img
-                    src={logoIcon}
-                    alt="logotemporal"
-                    className="h-8"
-                />
-                <Link to="/" className="text-xl font-bold text-ajuyDark">AJUY</Link>
+                <img src={logoIcon} alt="Logo" className="h-8" />
+                <Link to="/" className="text-xl font-bold text-ajuyDark">
+                    AJUY
+                </Link>
             </div>
 
             <nav className="flex-grow flex justify-center space-x-4">
@@ -95,19 +66,25 @@ const Header = () => {
                     <Link to="/author" className="text-ajuyMid mx-2 hover:text-ajuyDark">
                         Authors
                     </Link>
-                    <button className="text-ajuyMid mx-2 hover:text-ajuyDark">Contact</button>
+                    <button className="text-ajuyMid mx-2 hover:text-ajuyDark" aria-label="Contact Us">
+                        Contact
+                    </button>
                 </div>
             </nav>
 
             <div className="flex items-center">
                 <input
                     type="text"
-                    placeholder="Buscar..."
+                    placeholder="Search..."
+                    aria-label="Search"
                     className="border rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-ajuyDark"
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                     onKeyDown={handleSearch}
                 />
+                {errorMessage && (
+                    <span className="text-red-500 text-sm ml-3">{errorMessage}</span>
+                )}
             </div>
         </header>
     );

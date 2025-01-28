@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {parseAutores} from "../../utils.js";
 
-const Publications = ({ publications }) => {
+const Publications = ({publications}) => {
     const [expanded, setExpanded] = useState({});
     const navigate = useNavigate();
 
@@ -20,19 +21,6 @@ const Publications = ({ publications }) => {
         navigate(`/publication/${id}`);
     };
 
-    const parseAutores = (autoresArray) => {
-        try {
-            return autoresArray.map((autor) => {
-                const corrected = autor
-                    .replace(/'/g, '"')
-                    .replace(/ObjectId\("?(.*?)"?\)/g, '"$1"');
-                return JSON.parse(corrected);
-            });
-        } catch (error) {
-            console.error("Error al parsear autores:", error);
-            return [];
-        }
-    };
 
     return (
         <section className="p-6 bg-gray-50 rounded-xl shadow-lg w-[90rem]">
@@ -41,7 +29,7 @@ const Publications = ({ publications }) => {
                     {publications.map((pub) => (
                         <li
                             key={pub.id}
-                            className="bg-white border border-gray-300 rounded-lg overflow-hidden shadow hover:shadow-md"
+                            className="bg-white border border-gray-300  overflow-hidden shadow hover:shadow-md"
                         >
                             <h3
                                 className="bg-ajuyLight text-white text-lg font-semibold p-4 cursor-pointer hover:bg-ajuyMid"
@@ -51,7 +39,7 @@ const Publications = ({ publications }) => {
                             </h3>
                             {expanded[pub.id] && (
                                 <div className="p-4">
-                                    <h4 className="text-gray-700 font-medium">Autores:</h4>
+                                    <h4 className="text-gray-700 font-medium">Authors:</h4>
                                     <ul className="space-y-2">
                                         {parseAutores(pub.Autores).map((aut, index) => (
                                             <li key={index} className="text-blue-800">
@@ -66,14 +54,14 @@ const Publications = ({ publications }) => {
                                     </ul>
                                     {pub.Fecha_de_publicación && (
                                         <p className="text-gray-600 mt-2">
-                                            <strong>Publicado:</strong> {pub.Fecha_de_publicación}
+                                            <strong>Published:</strong> {pub.Fecha_de_publicación}
                                         </p>
                                     )}
                                     <button
                                         onClick={() => redirectToPublications(pub.id)}
                                         className="mt-4 bg-ajuyMid text-white px-4 py-2 rounded-lg hover:bg-ajuyDark"
                                     >
-                                        Ver publicación
+                                        View Publication
                                     </button>
                                 </div>
                             )}

@@ -8,6 +8,7 @@ import Theses from "../components/Author/Theses";
 import Patents from "../components/Author/Patents";
 import "../index.css";
 import bgImg from "../assets/bg-hero.jpg";
+import Spinner from "../components/Spinner.jsx";
 
 const Card = () => {
     const {id} = useParams();
@@ -19,7 +20,7 @@ const Card = () => {
     const [patents, setPatents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [activeComponent, setActiveComponent] = useState("Profile");
+    const [activeComponent, setActiveComponent] = useState("Projects");
 
     const fetchData = async (url, setter, extractFirstItem = false) => {
         try {
@@ -49,12 +50,12 @@ const Card = () => {
             setError(null);
 
             try {
-                await fetchData(`https://ajuy.onrender.com/autores/${id}`, setAuthor, true);
+                await fetchData(`http://127.0.0.1:8000/autores/${id}`, setAuthor, true);
                 await Promise.all([
-                    fetchData(`https://ajuy.onrender.com/publicaciones/autor/${id}`, setPublications),
-                    fetchData(`https://ajuy.onrender.com/proyectos/autor/${id}?page=1&size=50`, setProjects),
-                    fetchData(`https://ajuy.onrender.com/tesis/autor/${id}`, setTheses),
-                    fetchData(`https://ajuy.onrender.com/patentes/autor/${id}`, setPatents),
+                    fetchData(`http://127.0.0.1:8000/publicaciones/autor/${id}`, setPublications),
+                    fetchData(`http://127.0.0.1:8000/proyectos/autor/${id}?page=1&size=50`, setProjects),
+                    fetchData(`http://127.0.0.1:8000/tesis/autor/${id}`, setTheses),
+                    fetchData(`http://127.0.0.1:8000/patentes/autor/${id}`, setPatents),
                 ]);
             } catch (err) {
                 setError("Error al cargar los datos. Por favor, intente nuevamente.");
@@ -66,7 +67,10 @@ const Card = () => {
         fetchAllData();
     }, [id]);
 
-    if (loading) return <div className="text-black">Cargando...</div>;
+    if (loading) return (
+    <div className="w-screen h-screen justify-center flex items-center bg-ajuyWhite bg-gradient-to-b from from-ajuyBkn text-black">
+        <Spinner />
+    </div>);
     if (error) return <div className="text-red-500">Error: {error}</div>;
 
     const renderActiveComponent = () => {
@@ -97,14 +101,6 @@ const Card = () => {
 
 
                 <nav className="mt-10 flex space-x-4 ">
-                    <button
-                        className={`px-4 py-2 rounded w-[10rem] mb-3.5 ${
-                            activeComponent === "Profile" ? "bg-ajuyDark" : "bg-ajuyLight"
-                        }`}
-                        onClick={() => setActiveComponent("Profile")}
-                    >
-                        Info
-                    </button>
                     <button
                         className={`px-4 py-2 rounded w-[10rem] mb-3.5 ${
                             activeComponent === "Projects" ? "bg-ajuyDark" : "bg-ajuyLight"

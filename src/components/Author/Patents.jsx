@@ -38,19 +38,19 @@ const Patents = ({ patents }) => {
                                     )}
                                     {patent.Inventores && (
                                         <p className="text-gray-700 mb-2">
-                                            <strong>Inventores:</strong> {patent.Inventores.join(", ")}
+                                            <strong>Authors:</strong> {patent.Autores.join(", ")}
                                         </p>
                                     )}
                                     {patent.Fecha_de_publicación && (
                                         <p className="text-gray-600 mt-2">
-                                            <strong>Fecha de publicación:</strong> {patent.Fecha_de_publicación}
+                                            <strong>Publication date:</strong> {patent.Fecha_de_publicación}
                                         </p>
                                     )}
                                     <button
                                         onClick={() => redirectToPatent(patent.id)}
                                         className="mt-4 bg-ajuyMid text-white px-4 py-2 rounded-lg hover:bg-ajuyDark"
                                     >
-                                        Ver patente
+                                        View patent
                                     </button>
                                 </div>
                             )}
